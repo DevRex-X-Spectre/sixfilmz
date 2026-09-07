@@ -11,31 +11,25 @@ export function CameraLensIntro() {
   const animFrameRef = useRef<number | null>(null);
   const isDoneRef = useRef(false);
 
-  // Dedicated execution guards to guarantee each sound trigger fires exactly once
   const beep3PlayedRef = useRef(false);
   const beep2PlayedRef = useRef(false);
   const focusPlayedRef = useRef(false);
   const shutterPlayedRef = useRef(false);
 
-  // Manual immediate shutter snap on user click or touch
   const triggerShutterImmediate = () => {
     if (isDoneRef.current) return;
+
     isDoneRef.current = true;
     shutterPlayedRef.current = true;
 
-    // Immediately play the mechanical shutter release sound
+    // Directly triggered by the user's click/tap.
     void cameraAudio.playShutter();
 
     setCountdown(null);
     setPhase("shutter");
 
-    setTimeout(() => {
-      setPhase("flash");
-    }, 60);
-
-    setTimeout(() => {
-      setPhase("revealed");
-    }, 320);
+    setTimeout(() => setPhase("flash"), 60);
+    setTimeout(() => setPhase("revealed"), 320);
 
     setTimeout(() => {
       setPhase("done");
@@ -44,11 +38,9 @@ export function CameraLensIntro() {
   };
 
   useEffect(() => {
-    // 1. Initialize and preload camera audio assets immediately
     cameraAudio.initialize();
     cameraAudio.preload();
 
-    // 2. High-precision timeline master loop
     const startTime = performance.now();
 
     const loop = () => {
@@ -56,54 +48,49 @@ export function CameraLensIntro() {
 
       const elapsed = (performance.now() - startTime) / 1000;
 
-      // T+0.0s - 1.0s: Count 3 + Beep
-      if (elapsed < 1.0) {
+      // 3
+      if (elapsed >= 0 && !beep3PlayedRef.current) {
+        beep3PlayedRef.current = true;
+        void cameraAudio.playBeep();
+      }
+
+      // 2
+      if (elapsed >= 1 && !beep2PlayedRef.current) {
+        beep2PlayedRef.current = true;
+        void cameraAudio.playBeep();
+      }
+
+      // 1 + focus lock
+      if (elapsed >= 2 && !focusPlayedRef.current) {
+        focusPlayedRef.current = true;
+        void cameraAudio.playFocus();
+      }
+
+      // SHUTTER — automatic 3s shutter trigger
+      if (elapsed >= 3 && !shutterPlayedRef.current) {
+        shutterPlayedRef.current = true;
+        void cameraAudio.playShutter();
+      }
+
+      if (elapsed < 1) {
         setCountdown(3);
         setPhase("counting");
-        if (!beep3PlayedRef.current) {
-          beep3PlayedRef.current = true;
-          void cameraAudio.playBeep();
-        }
-      }
-      // T+1.0s - 2.0s: Count 2 + Beep
-      else if (elapsed < 2.0) {
+      } else if (elapsed < 2) {
         setCountdown(2);
         setPhase("counting");
-        if (!beep2PlayedRef.current) {
-          beep2PlayedRef.current = true;
-          void cameraAudio.playBeep();
-        }
-      }
-      // T+2.0s - 3.0s: Count 1 + Autofocus Lock Chime
-      else if (elapsed < 3.0) {
+      } else if (elapsed < 3) {
         setCountdown(1);
         setPhase("locked");
-        if (!focusPlayedRef.current) {
-          focusPlayedRef.current = true;
-          void cameraAudio.playFocus();
-        }
-      }
-      // T+3.0s - 3.08s: Mechanical Shutter Snap (Audible shutter release)
-      else if (elapsed < 3.08) {
+      } else if (elapsed < 3.08) {
         setCountdown(null);
         setPhase("shutter");
-        if (!shutterPlayedRef.current) {
-          shutterPlayedRef.current = true;
-          void cameraAudio.playShutter();
-        }
-      }
-      // T+3.08s - 3.32s: Aperture Flash
-      else if (elapsed < 3.32) {
+      } else if (elapsed < 3.32) {
         setCountdown(null);
         setPhase("flash");
-      }
-      // T+3.32s - 4.1s: Viewfinder Smooth Reveal
-      else if (elapsed < 4.1) {
+      } else if (elapsed < 4.1) {
         setCountdown(null);
         setPhase("revealed");
-      }
-      // T+4.1s+: Complete transition and unmount
-      else {
+      } else {
         isDoneRef.current = true;
         setPhase("done");
         setActive(false);
@@ -136,7 +123,7 @@ export function CameraLensIntro() {
       }`}
       aria-label="Camera Viewfinder"
     >
-      {/* 1. Optical Lens Blur Layer (Focus racks into sharp 4K) */}
+      {/* 1. Optical Lens Blur Layer */}
       <div
         className={`absolute inset-0 transition-all duration-700 ease-out ${
           phase === "counting"
@@ -147,7 +134,7 @@ export function CameraLensIntro() {
         }`}
       />
 
-      {/* 2. Photographic Aperture Flash (Crisp white flash on shutter release) */}
+      {/* 2. Photographic Aperture Flash */}
       <div
         className={`pointer-events-none absolute inset-0 bg-white transition-opacity ${
           phase === "shutter" || phase === "flash"
@@ -234,7 +221,7 @@ export function CameraLensIntro() {
       {/* 5. Bottom Viewfinder HUD (Exposure, Shutter speed) */}
       <footer
         className={`relative z-10 flex items-center justify-between px-4 pb-4 sm:px-10 sm:pb-8 font-mono text-[10px] sm:text-xs tracking-widest text-white/80 transition-transform duration-500 ${
-          phase === "revealed" ? "translate-y-10 opacity-0" : "translate-y-0 opacity-100"
+          phase === "revealed" ? "-translate-y-10 opacity-0" : "translate-y-0 opacity-100"
         }`}
       >
         <div className="flex items-center gap-2 text-white/60">
