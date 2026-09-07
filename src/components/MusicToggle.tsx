@@ -50,15 +50,12 @@ export function MusicToggle() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Immediately mute and pause
+    // Immediately mute and pause ambient music
     audio.muted = true;
     audio.pause();
     audio.currentTime = 0;
     setPlaying(false);
     localStorage.setItem(STORAGE_KEY, "false");
-
-    // Also broadcast to stop any Web Audio synthetic oscillators/engine
-    window.dispatchEvent(new CustomEvent("sixfilmz:mute-all"));
 
     // If a play promise is resolving, ensure it pauses as soon as resolved
     if (playPromiseRef.current) {

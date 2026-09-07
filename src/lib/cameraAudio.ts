@@ -1,32 +1,19 @@
 // SixFilmz Production Camera Audio Service
-// One authoritative source of truth for all camera-related audio
-
-export type AudioState =
-  | "uninitialized"
-  | "ready"
-  | "blocked"
-  | "unlocked"
-  | "error";
+// Dedicated, lightweight HTMLAudioElement controller for camera sound effects
 
 const AUDIO_PATHS = {
-  sequence: "/audio/camera-sequence.wav",
   shutter: "/audio/camera-shutter.wav",
   focus: "/audio/focus-lock.wav",
   beep: "/audio/timer-beep.wav",
 } as const;
 
 class CameraAudioService {
-  private state: AudioState = "uninitialized";
   private isInitialized = false;
 
-  // Single authoritative audio elements
-  private sequenceAudio: HTMLAudioElement | null = null;
+  // Single authoritative audio elements for camera effects
   private shutterAudio: HTMLAudioElement | null = null;
   private focusAudio: HTMLAudioElement | null = null;
   private beepAudio: HTMLAudioElement | null = null;
-
-  // Single AudioContext for browser unlocking and hardware clock
-  private audioCtx: AudioContext | null = null;
 
   private log(message: string, ...args: unknown[]) {
     if (import.meta.env.DEV) {
@@ -40,38 +27,34 @@ class CameraAudioService {
     }
   }
 
-  private createAudioElement(src: string, volume: number): HTMLAudioElement {
+  private createAudio(src: string, volume: number): HTMLAudioElement {
     const audio = new Audio(src);
     audio.preload = "auto";
     audio.volume = volume;
-    // Load asset into browser memory cache
     audio.load();
     return audio;
   }
 
   /**
-   * SSR-safe, idempotent initialization of all camera audio resources.
+   * SSR-safe, idempotent initialization of all camera sound assets.
    */
   public initialize(): void {
     if (typeof window === "undefined" || this.isInitialized) return;
 
     try {
-      this.sequenceAudio = this.createAudioElement(AUDIO_PATHS.sequence, 1.0);
-      this.shutterAudio = this.createAudioElement(AUDIO_PATHS.shutter, 1.0);
-      this.focusAudio = this.createAudioElement(AUDIO_PATHS.focus, 0.75);
-      this.beepAudio = this.createAudioElement(AUDIO_PATHS.beep, 0.7);
+      this.shutterAudio = this.createAudio(AUDIO_PATHS.shutter, 1.0);
+      this.focusAudio = this.createAudio(AUDIO_PATHS.focus, 0.8);
+      this.beepAudio = this.createAudio(AUDIO_PATHS.beep, 0.75);
 
       this.isInitialized = true;
-      this.state = "ready";
       this.log("initialized & assets preloaded");
     } catch (err) {
-      this.state = "error";
-      this.warn("Failed to initialize audio subsystem:", err);
+      this.warn("Failed to initialize camera audio elements:", err);
     }
   }
 
   /**
-   * Preload audio buffers explicitly.
+   * Explicit preload trigger.
    */
   public preload(): void {
     if (!this.isInitialized) {
@@ -80,168 +63,84 @@ class CameraAudioService {
   }
 
   /**
-   * Returns or creates the singleton AudioContext.
+   * Plays the countdown interval beep (0.0s and 1.0s).
    */
-  public getContext(): AudioContext | null {
-    if (typeof window === "undefined") return null;
-
-    if (!this.audioCtx) {
-      try {
-        const AudioCtxClass =
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext;
-        if (AudioCtxClass) {
-          this.audioCtx = new AudioCtxClass();
-        }
-      } catch (err) {
-        this.warn("AudioContext not supported or creation failed:", err);
-      }
-    }
-    return this.audioCtx;
-  }
-
-  /**
-   * Unlocks AudioContext and media subsystem upon valid user interaction.
-   */
-  public async unlock(): Promise<boolean> {
+  public async playBeep(): Promise<boolean> {
     if (typeof window === "undefined") return false;
-
-    if (!this.isInitialized) {
-      this.initialize();
-    }
-
-    const ctx = this.getContext();
-    if (ctx && ctx.state === "suspended") {
-      try {
-        await ctx.resume();
-      } catch (err) {
-        this.warn("Failed to resume AudioContext during unlock:", err);
-      }
-    }
-
-    const isRunning = ctx ? ctx.state === "running" : true;
-    if (isRunning) {
-      this.state = "unlocked";
-      this.log("audio unlocked via user gesture");
-    }
-    return isRunning;
-  }
-
-  /**
-   * Check if global mute is active.
-   */
-  private isMuted(): boolean {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("musicPlaying") === "false";
-  }
-
-  /**
-   * Plays the complete 3.6s camera countdown + shutter sequence.
-   * Resolves to true if playback starts (autoplay allowed), false if blocked by browser policy.
-   */
-  public async playSequence(): Promise<boolean> {
-    if (typeof window === "undefined" || this.isMuted()) return false;
-
     this.initialize();
-    if (!this.sequenceAudio) return false;
+    if (!this.beepAudio) return false;
 
     try {
-      this.sequenceAudio.currentTime = 0;
-      this.sequenceAudio.volume = 1.0;
-      await this.sequenceAudio.play();
-      this.state = "unlocked";
-      this.log("autoplay allowed: sequence playing");
+      this.beepAudio.currentTime = 0;
+      this.beepAudio.volume = 0.75;
+      await this.beepAudio.play();
+      this.log("beep played");
       return true;
     } catch (err: unknown) {
       const error = err as Error;
       if (error.name === "NotAllowedError") {
-        this.state = "blocked";
-        this.log("autoplay blocked by browser policy (awaiting user gesture)");
+        this.log("beep autoplay blocked by browser policy");
       } else {
-        this.warn("Sequence playback error:", error);
+        this.warn("Beep playback error:", error);
       }
       return false;
     }
   }
 
   /**
-   * Immediately plays the mechanical shutter sound (used on click/tap or shutter phase).
+   * Plays the autofocus lock confirmation chime (2.0s).
+   */
+  public async playFocus(): Promise<boolean> {
+    if (typeof window === "undefined") return false;
+    this.initialize();
+    if (!this.focusAudio) return false;
+
+    try {
+      this.focusAudio.currentTime = 0;
+      this.focusAudio.volume = 0.8;
+      await this.focusAudio.play();
+      this.log("focus lock chime played");
+      return true;
+    } catch (err: unknown) {
+      const error = err as Error;
+      if (error.name === "NotAllowedError") {
+        this.log("focus chime autoplay blocked by browser policy");
+      } else {
+        this.warn("Focus chime playback error:", error);
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Plays the mechanical camera shutter release sound (3.0s or immediate on tap/click).
    */
   public async playShutter(): Promise<boolean> {
-    if (typeof window === "undefined" || this.isMuted()) return false;
-
+    if (typeof window === "undefined") return false;
     this.initialize();
-    this.unlock();
-
-    // Stop sequence audio to prevent duplicate sound
-    if (this.sequenceAudio && !this.sequenceAudio.paused) {
-      this.sequenceAudio.pause();
-      this.sequenceAudio.currentTime = 0;
-    }
-
     if (!this.shutterAudio) return false;
 
     try {
       this.shutterAudio.currentTime = 0;
       this.shutterAudio.volume = 1.0;
       await this.shutterAudio.play();
-      this.log("shutter played");
+      this.log("shutter sound played");
       return true;
-    } catch (err) {
-      this.warn("Shutter playback failed:", err);
+    } catch (err: unknown) {
+      const error = err as Error;
+      if (error.name === "NotAllowedError") {
+        this.log("shutter autoplay blocked by browser policy");
+      } else {
+        this.warn("Shutter playback error:", error);
+      }
       return false;
     }
   }
 
   /**
-   * Plays the focus-lock confirmation chime.
-   */
-  public async playFocus(): Promise<boolean> {
-    if (typeof window === "undefined" || this.isMuted()) return false;
-
-    this.initialize();
-    if (!this.focusAudio) return false;
-
-    try {
-      this.focusAudio.currentTime = 0;
-      this.focusAudio.volume = 0.75;
-      await this.focusAudio.play();
-      return true;
-    } catch (err) {
-      this.warn("Focus chime playback failed:", err);
-      return false;
-    }
-  }
-
-  /**
-   * Plays the countdown interval beep.
-   */
-  public async playBeep(): Promise<boolean> {
-    if (typeof window === "undefined" || this.isMuted()) return false;
-
-    this.initialize();
-    if (!this.beepAudio) return false;
-
-    try {
-      this.beepAudio.currentTime = 0;
-      this.beepAudio.volume = 0.7;
-      await this.beepAudio.play();
-      return true;
-    } catch (err) {
-      this.warn("Beep playback failed:", err);
-      return false;
-    }
-  }
-
-  /**
-   * Halts all camera audio immediately.
+   * Immediately stops all camera sound effects.
    */
   public stopAll(): void {
-    if (this.sequenceAudio) {
-      this.sequenceAudio.pause();
-      this.sequenceAudio.currentTime = 0;
-    }
     if (this.shutterAudio) {
       this.shutterAudio.pause();
       this.shutterAudio.currentTime = 0;
@@ -255,13 +154,6 @@ class CameraAudioService {
       this.beepAudio.currentTime = 0;
     }
     this.log("all camera sounds stopped");
-  }
-
-  /**
-   * Returns current audio state machine state.
-   */
-  public getState(): AudioState {
-    return this.state;
   }
 }
 

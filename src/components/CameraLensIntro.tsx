@@ -7,15 +7,23 @@ export function CameraLensIntro() {
     "counting" | "locked" | "shutter" | "flash" | "revealed" | "done"
   >("counting");
   const [active, setActive] = useState(true);
+
   const animFrameRef = useRef<number | null>(null);
   const isDoneRef = useRef(false);
 
-  // Instant shutter trigger if user taps/clicks early
+  // Dedicated execution guards to guarantee each sound trigger fires exactly once
+  const beep3PlayedRef = useRef(false);
+  const beep2PlayedRef = useRef(false);
+  const focusPlayedRef = useRef(false);
+  const shutterPlayedRef = useRef(false);
+
+  // Manual immediate shutter snap on user click or touch
   const triggerShutterImmediate = () => {
     if (isDoneRef.current) return;
     isDoneRef.current = true;
+    shutterPlayedRef.current = true;
 
-    // Immediately trigger authentic shutter sound
+    // Immediately play the mechanical shutter release sound
     void cameraAudio.playShutter();
 
     setCountdown(null);
@@ -36,29 +44,11 @@ export function CameraLensIntro() {
   };
 
   useEffect(() => {
-    // 1. Initialize and preload camera audio assets
+    // 1. Initialize and preload camera audio assets immediately
     cameraAudio.initialize();
     cameraAudio.preload();
 
-    // 2. Attempt automatic sequence playback
-    void cameraAudio.playSequence();
-
-    // 3. Fallback: on first user gesture, unlock audio subsystem
-    const handleFirstGesture = () => {
-      void cameraAudio.unlock();
-    };
-
-    window.addEventListener("pointerdown", handleFirstGesture, { once: true });
-    window.addEventListener("touchstart", handleFirstGesture, { once: true });
-    window.addEventListener("keydown", handleFirstGesture, { once: true });
-
-    // Listen for global mute toggle
-    const onMuteAll = () => {
-      cameraAudio.stopAll();
-    };
-    window.addEventListener("sixfilmz:mute-all", onMuteAll);
-
-    // 4. High-precision visual countdown & shutter timeline
+    // 2. High-precision timeline master loop
     const startTime = performance.now();
 
     const loop = () => {
@@ -66,32 +56,54 @@ export function CameraLensIntro() {
 
       const elapsed = (performance.now() - startTime) / 1000;
 
+      // T+0.0s - 1.0s: Count 3 + Beep
       if (elapsed < 1.0) {
-        // [0.0s - 1.0s] -> 3
         setCountdown(3);
         setPhase("counting");
-      } else if (elapsed < 2.0) {
-        // [1.0s - 2.0s] -> 2
+        if (!beep3PlayedRef.current) {
+          beep3PlayedRef.current = true;
+          void cameraAudio.playBeep();
+        }
+      }
+      // T+1.0s - 2.0s: Count 2 + Beep
+      else if (elapsed < 2.0) {
         setCountdown(2);
         setPhase("counting");
-      } else if (elapsed < 3.0) {
-        // [2.0s - 3.0s] -> 1 (AF Focus Lock)
+        if (!beep2PlayedRef.current) {
+          beep2PlayedRef.current = true;
+          void cameraAudio.playBeep();
+        }
+      }
+      // T+2.0s - 3.0s: Count 1 + Autofocus Lock Chime
+      else if (elapsed < 3.0) {
         setCountdown(1);
         setPhase("locked");
-      } else if (elapsed < 3.08) {
-        // [3.0s - 3.08s] -> Shutter snap
+        if (!focusPlayedRef.current) {
+          focusPlayedRef.current = true;
+          void cameraAudio.playFocus();
+        }
+      }
+      // T+3.0s - 3.08s: Mechanical Shutter Snap (Audible shutter release)
+      else if (elapsed < 3.08) {
         setCountdown(null);
         setPhase("shutter");
-      } else if (elapsed < 3.32) {
-        // [3.08s - 3.32s] -> Aperture flash
+        if (!shutterPlayedRef.current) {
+          shutterPlayedRef.current = true;
+          void cameraAudio.playShutter();
+        }
+      }
+      // T+3.08s - 3.32s: Aperture Flash
+      else if (elapsed < 3.32) {
         setCountdown(null);
         setPhase("flash");
-      } else if (elapsed < 4.1) {
-        // [3.32s - 4.1s] -> Viewfinder smooth reveal
+      }
+      // T+3.32s - 4.1s: Viewfinder Smooth Reveal
+      else if (elapsed < 4.1) {
         setCountdown(null);
         setPhase("revealed");
-      } else {
-        // [4.1s+] -> Complete and unmount
+      }
+      // T+4.1s+: Complete transition and unmount
+      else {
         isDoneRef.current = true;
         setPhase("done");
         setActive(false);
@@ -107,10 +119,6 @@ export function CameraLensIntro() {
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
       }
-      window.removeEventListener("pointerdown", handleFirstGesture);
-      window.removeEventListener("touchstart", handleFirstGesture);
-      window.removeEventListener("keydown", handleFirstGesture);
-      window.removeEventListener("sixfilmz:mute-all", onMuteAll);
       cameraAudio.stopAll();
     };
   }, []);
@@ -128,7 +136,7 @@ export function CameraLensIntro() {
       }`}
       aria-label="Camera Viewfinder"
     >
-      {/* 1. Optical Lens Blur Layer (Focus hunting into sharp 4K) */}
+      {/* 1. Optical Lens Blur Layer (Focus racks into sharp 4K) */}
       <div
         className={`absolute inset-0 transition-all duration-700 ease-out ${
           phase === "counting"
