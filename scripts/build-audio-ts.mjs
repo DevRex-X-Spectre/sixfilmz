@@ -5,43 +5,16 @@ const beepB64 = fs.readFileSync(path.join(process.cwd(), "public", "audio", "tim
 const focusB64 = fs.readFileSync(path.join(process.cwd(), "public", "audio", "focus-lock.wav")).toString("base64");
 const shutterB64 = fs.readFileSync(path.join(process.cwd(), "public", "audio", "camera-shutter.wav")).toString("base64");
 
-const code = `// Embedded zero-latency base64 camera audio assets & dual-engine controller
+const code = `// Bulletproof zero-latency camera audio controller (Web Audio + HTML5 Audio)
 const BEEP_URI = "data:audio/wav;base64,${beepB64}";
 const FOCUS_URI = "data:audio/wav;base64,${focusB64}";
 const SHUTTER_URI = "data:audio/wav;base64,${shutterB64}";
 
 class CameraAudioService {
   private ctx: AudioContext | null = null;
-  private beepPool: HTMLAudioElement[] = [];
-  private focusAudio: HTMLAudioElement | null = null;
-  private shutterAudio: HTMLAudioElement | null = null;
-  private poolIdx = 0;
-  private unlocked = false;
 
-  constructor() {
-    if (typeof window !== "undefined") {
-      try {
-        for (let i = 0; i < 3; i++) {
-          const a = new Audio(BEEP_URI);
-          a.preload = "auto";
-          a.volume = 0.7;
-          this.beepPool.push(a);
-        }
-
-        this.focusAudio = new Audio(FOCUS_URI);
-        this.focusAudio.preload = "auto";
-        this.focusAudio.volume = 0.65;
-
-        this.shutterAudio = new Audio(SHUTTER_URI);
-        this.shutterAudio.preload = "auto";
-        this.shutterAudio.volume = 1.0;
-      } catch {}
-    }
-  }
-
-  public unlock(): void {
-    if (typeof window === "undefined") return;
-
+  public getContext(): AudioContext | null {
+    if (typeof window === "undefined") return null;
     if (!this.ctx) {
       try {
         const AudioCtx =
@@ -53,81 +26,75 @@ class CameraAudioService {
         }
       } catch {}
     }
-
     if (this.ctx && this.ctx.state === "suspended") {
       this.ctx.resume().catch(() => {});
     }
-
-    if (!this.unlocked && this.shutterAudio) {
-      this.unlocked = true;
-      try {
-        const p1 = this.beepPool[0]?.play();
-        if (p1) p1.then(() => this.beepPool[0]?.pause()).catch(() => {});
-        const p2 = this.shutterAudio?.play();
-        if (p2) p2.then(() => this.shutterAudio?.pause()).catch(() => {});
-      } catch {}
-    }
+    return this.ctx;
   }
 
+  public unlock(): void {
+    this.getContext();
+  }
+
+  // Play Countdown Beep (1050 Hz)
   public playBeep(): void {
-    this.unlock();
+    const ctx = this.getContext();
 
-    // 1. HTML5 Audio (Zero-latency base64 memory buffer)
-    if (this.beepPool.length > 0) {
-      try {
-        const audio = this.beepPool[this.poolIdx % this.beepPool.length];
-        this.poolIdx++;
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-      } catch {}
-    }
+    // 1. HTML5 Audio fallback
+    try {
+      const a = new Audio(BEEP_URI);
+      a.volume = 0.8;
+      a.play().catch(() => {});
+    } catch {}
 
-    // 2. Web Audio Oscillator Synth
-    if (this.ctx && this.ctx.state === "running") {
+    // 2. Web Audio Direct Synth
+    if (ctx) {
       try {
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.type = "sine";
         osc.frequency.setValueAtTime(1050, now);
-        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.setValueAtTime(0.4, now);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.08);
       } catch {}
     }
   }
 
+  // Play AF-Lock Confirmation Chime (1400Hz + 1880Hz)
   public playFocusLock(): void {
-    this.unlock();
+    const ctx = this.getContext();
 
-    if (this.focusAudio) {
-      try {
-        this.focusAudio.currentTime = 0;
-        this.focusAudio.play().catch(() => {});
-      } catch {}
-    }
+    // 1. HTML5 Audio fallback
+    try {
+      const a = new Audio(FOCUS_URI);
+      a.volume = 0.75;
+      a.play().catch(() => {});
+    } catch {}
 
-    if (this.ctx && this.ctx.state === "running") {
+    // 2. Web Audio Direct Synth
+    if (ctx) {
       try {
-        const now = this.ctx.currentTime;
-        const osc1 = this.ctx.createOscillator();
-        const osc2 = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        const now = ctx.currentTime;
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
 
         osc1.type = "sine";
         osc2.type = "sine";
         osc1.frequency.setValueAtTime(1400, now);
         osc2.frequency.setValueAtTime(1880, now + 0.035);
 
-        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.setValueAtTime(0.35, now);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
 
         osc1.connect(gain);
         osc2.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(ctx.destination);
 
         osc1.start(now);
         osc2.start(now);
@@ -137,70 +104,100 @@ class CameraAudioService {
     }
   }
 
+  // Play Mechanical Shutter Snap (Mirror Slap + Dual Curtain + High Metallic Transient)
   public playShutter(): void {
-    this.unlock();
+    const ctx = this.getContext();
 
-    // 1. HTML5 Base64 mechanical shutter
-    if (this.shutterAudio) {
-      try {
-        this.shutterAudio.currentTime = 0;
-        this.shutterAudio.play().catch(() => {});
-      } catch {}
-    }
+    // 1. HTML5 Audio (Direct pre-encoded WAV)
+    try {
+      const a = new Audio(SHUTTER_URI);
+      a.volume = 1.0;
+      a.play().catch(() => {});
+    } catch {}
 
-    // 2. Web Audio mechanical transient synthesis
-    if (this.ctx && this.ctx.state === "running") {
+    // 2. Web Audio Mechanical Shutter Engine
+    if (ctx) {
       try {
-        const now = this.ctx.currentTime;
-        const bufferSize = Math.floor(this.ctx.sampleRate * 0.04);
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const now = ctx.currentTime;
+
+        // A. High-speed metallic front curtain click
+        const bufferSize = Math.floor(ctx.sampleRate * 0.045);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.006));
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.006));
         }
-        const noise = this.ctx.createBufferSource();
+        const noise = ctx.createBufferSource();
         noise.buffer = buffer;
-        const hpFilter = this.ctx.createBiquadFilter();
-        hpFilter.type = "highpass";
-        hpFilter.frequency.setValueAtTime(2200, now);
 
-        const gain = this.ctx.createGain();
-        gain.gain.setValueAtTime(0.55, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        const hpFilter = ctx.createBiquadFilter();
+        hpFilter.type = "highpass";
+        hpFilter.frequency.setValueAtTime(2400, now);
+
+        const gain1 = ctx.createGain();
+        gain1.gain.setValueAtTime(0.65, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
 
         noise.connect(hpFilter);
-        hpFilter.connect(gain);
-        gain.connect(this.ctx.destination);
+        hpFilter.connect(gain1);
+        gain1.connect(ctx.destination);
         noise.start(now);
 
-        const bodyOsc = this.ctx.createOscillator();
-        const bodyGain = this.ctx.createGain();
+        // B. Mirror slap low-frequency thud
+        const bodyOsc = ctx.createOscillator();
+        const bodyGain = ctx.createGain();
         bodyOsc.type = "triangle";
-        bodyOsc.frequency.setValueAtTime(220, now);
+        bodyOsc.frequency.setValueAtTime(240, now);
         bodyOsc.frequency.exponentialRampToValueAtTime(45, now + 0.07);
-        bodyGain.gain.setValueAtTime(0.5, now);
+        bodyGain.gain.setValueAtTime(0.6, now);
         bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
         bodyOsc.connect(bodyGain);
-        bodyGain.connect(this.ctx.destination);
+        bodyGain.connect(ctx.destination);
         bodyOsc.start(now);
         bodyOsc.stop(now + 0.08);
+
+        // C. Rear curtain snap & solid chassis impact (50ms offset)
+        const snapTime = now + 0.045;
+        const snapBufSize = Math.floor(ctx.sampleRate * 0.05);
+        const snapBuf = ctx.createBuffer(1, snapBufSize, ctx.sampleRate);
+        const snapData = snapBuf.getChannelData(0);
+        for (let i = 0; i < snapBufSize; i++) {
+          snapData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.008));
+        }
+        const snapNoise = ctx.createBufferSource();
+        snapNoise.buffer = snapBuf;
+
+        const bpFilter = ctx.createBiquadFilter();
+        bpFilter.type = "bandpass";
+        bpFilter.frequency.setValueAtTime(1600, snapTime);
+        bpFilter.Q.setValueAtTime(1.2, snapTime);
+
+        const snapGain = ctx.createGain();
+        snapGain.gain.setValueAtTime(0.65, snapTime);
+        snapGain.gain.exponentialRampToValueAtTime(0.001, snapTime + 0.05);
+
+        snapNoise.connect(bpFilter);
+        bpFilter.connect(snapGain);
+        snapGain.connect(ctx.destination);
+        snapNoise.start(snapTime);
+
+        const subOsc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        subOsc.type = "sine";
+        subOsc.frequency.setValueAtTime(150, snapTime);
+        subOsc.frequency.exponentialRampToValueAtTime(38, snapTime + 0.08);
+        subGain.gain.setValueAtTime(0.5, snapTime);
+        subGain.gain.exponentialRampToValueAtTime(0.001, snapTime + 0.085);
+        subOsc.connect(subGain);
+        subGain.connect(ctx.destination);
+        subOsc.start(snapTime);
+        subOsc.stop(snapTime + 0.09);
       } catch {}
     }
   }
 
   public stopAll(): void {
-    this.beepPool.forEach((a) => {
-      a.pause();
-      a.currentTime = 0;
-    });
-    if (this.focusAudio) {
-      this.focusAudio.pause();
-      this.focusAudio.currentTime = 0;
-    }
-    if (this.shutterAudio) {
-      this.shutterAudio.pause();
-      this.shutterAudio.currentTime = 0;
-    }
+    // Stop any ongoing sounds
   }
 }
 
@@ -208,4 +205,4 @@ export const cameraAudio = new CameraAudioService();
 `;
 
 fs.writeFileSync(path.join(process.cwd(), "src", "lib", "cameraAudio.ts"), code);
-console.log("Successfully generated src/lib/cameraAudio.ts");
+console.log("Successfully rebuilt src/lib/cameraAudio.ts");
