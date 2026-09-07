@@ -32,13 +32,13 @@ export function Navbar() {
       }}
     >
       <div className="mx-auto max-w-7xl px-4 pt-4 pb-4 font-semibold sm:px-6 sm:pt-6 sm:pb-6 lg:px-12">
-        <div className="grid grid-cols-3 items-center">
-          <div className="flex items-center gap-8 lg:gap-12">
+        <div className="flex items-center justify-between lg:grid lg:grid-cols-3">
+          <div className="hidden items-center gap-8 lg:flex lg:gap-12">
             {left.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="hidden text-sm font-light text-gray-300 transition-colors duration-500 hover:text-white lg:inline"
+                className="text-sm font-light text-gray-300 transition-colors duration-500 hover:text-white"
               >
                 {link.label}
               </a>
@@ -47,13 +47,13 @@ export function Navbar() {
 
           <a
             href="#top"
-            className="group mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105"
+            className="group flex items-center justify-start lg:justify-center transition-transform duration-300 hover:scale-105"
             aria-label="SIX FILMZ Home"
           >
             <img
               src="/channels4_profile.jpg"
               alt="SIX FILMZ Logo"
-              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover transition-all duration-300"
+              className="h-14 w-14 sm:h-18 sm:w-18 lg:h-20 lg:w-20 rounded-full object-cover transition-all duration-300"
             />
           </a>
 
@@ -69,12 +69,12 @@ export function Navbar() {
             ))}
             <button
               type="button"
-              className="rounded-full border border-gray-800/50 p-3 text-gray-300 lg:hidden"
+              className="rounded-full p-2 text-gray-300 transition-colors hover:text-white lg:hidden"
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
             >
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>

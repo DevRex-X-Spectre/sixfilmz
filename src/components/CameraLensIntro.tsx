@@ -1,100 +1,205 @@
 import { useEffect, useState, useRef } from "react";
 
-// Web Audio API synthesizer fallback
-function getAudioContext(): AudioContext | null {
-  try {
-    const AudioCtx =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext })
-        .webkitAudioContext;
-    if (!AudioCtx) return null;
-    const ctx = new AudioCtx();
-    if (ctx.state === "suspended") {
-      ctx.resume().catch(() => {});
+// Web Audio API Sample-Accurate Engine for Camera Sounds
+class CameraAudioEngine {
+  private ctx: AudioContext | null = null;
+  private nodes: (AudioNode | number)[] = [];
+
+  init(): AudioContext | null {
+    if (!this.ctx) {
+      try {
+        const AudioCtx =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext;
+        if (AudioCtx) {
+          this.ctx = new AudioCtx();
+        }
+      } catch {
+        return null;
+      }
     }
-    return ctx;
-  } catch {
-    return null;
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume().catch(() => {});
+    }
+    return this.ctx;
+  }
+
+  // Schedule a clean camera countdown interval beep at exact hardware time
+  scheduleBeep(time: number, freq = 1050, duration = 0.065) {
+    const ctx = this.init();
+    if (!ctx) return;
+
+    try {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, time);
+
+      gain.gain.setValueAtTime(0.18, time);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(time);
+      osc.stop(time + duration);
+      this.nodes.push(osc, gain);
+    } catch {}
+  }
+
+  // Schedule focus lock confirmation chime at exact hardware time
+  scheduleFocusLock(time: number) {
+    const ctx = this.init();
+    if (!ctx) return;
+
+    try {
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = "sine";
+      osc2.type = "sine";
+
+      osc1.frequency.setValueAtTime(1400, time);
+      osc2.frequency.setValueAtTime(1880, time + 0.035);
+
+      gain.gain.setValueAtTime(0.16, time);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.15);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(time);
+      osc2.start(time);
+      osc1.stop(time + 0.15);
+      osc2.stop(time + 0.15);
+      this.nodes.push(osc1, osc2, gain);
+    } catch {}
+  }
+
+  // Schedule authentic mechanical camera shutter release at exact hardware time
+  scheduleShutter(time: number) {
+    const ctx = this.init();
+    if (!ctx) return;
+
+    try {
+      // 1. Pre-shutter mirror-lift & front curtain high-speed metallic transient
+      const bufferSize = Math.floor(ctx.sampleRate * 0.035);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] =
+          (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.005));
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const hpFilter = ctx.createBiquadFilter();
+      hpFilter.type = "highpass";
+      hpFilter.frequency.setValueAtTime(2400, time);
+
+      const gain1 = ctx.createGain();
+      gain1.gain.setValueAtTime(0.4, time);
+      gain1.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
+
+      noise.connect(hpFilter);
+      hpFilter.connect(gain1);
+      gain1.connect(ctx.destination);
+      noise.start(time);
+
+      // 2. Mirror slap thud
+      const bodyOsc = ctx.createOscillator();
+      const bodyGain = ctx.createGain();
+      bodyOsc.type = "triangle";
+      bodyOsc.frequency.setValueAtTime(240, time);
+      bodyOsc.frequency.exponentialRampToValueAtTime(45, time + 0.06);
+
+      bodyGain.gain.setValueAtTime(0.35, time);
+      bodyGain.gain.exponentialRampToValueAtTime(0.001, time + 0.065);
+
+      bodyOsc.connect(bodyGain);
+      bodyGain.connect(ctx.destination);
+      bodyOsc.start(time);
+      bodyOsc.stop(time + 0.07);
+
+      // 3. Rear curtain snap & solid chassis impact (50ms later)
+      const snapTime = time + 0.05;
+      const snapBufSize = Math.floor(ctx.sampleRate * 0.045);
+      const snapBuf = ctx.createBuffer(1, snapBufSize, ctx.sampleRate);
+      const snapData = snapBuf.getChannelData(0);
+      for (let i = 0; i < snapBufSize; i++) {
+        snapData[i] =
+          (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.008));
+      }
+      const snapNoise = ctx.createBufferSource();
+      snapNoise.buffer = snapBuf;
+
+      const bpFilter = ctx.createBiquadFilter();
+      bpFilter.type = "bandpass";
+      bpFilter.frequency.setValueAtTime(1600, snapTime);
+      bpFilter.Q.setValueAtTime(1.2, snapTime);
+
+      const snapGain = ctx.createGain();
+      snapGain.gain.setValueAtTime(0.42, snapTime);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, snapTime + 0.045);
+
+      snapNoise.connect(bpFilter);
+      bpFilter.connect(snapGain);
+      snapGain.connect(ctx.destination);
+      snapNoise.start(snapTime);
+
+      const subOsc = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      subOsc.type = "sine";
+      subOsc.frequency.setValueAtTime(150, snapTime);
+      subOsc.frequency.exponentialRampToValueAtTime(38, snapTime + 0.08);
+
+      subGain.gain.setValueAtTime(0.3, snapTime);
+      subGain.gain.exponentialRampToValueAtTime(0.001, snapTime + 0.085);
+
+      subOsc.connect(subGain);
+      subGain.connect(ctx.destination);
+      subOsc.start(snapTime);
+      subOsc.stop(snapTime + 0.09);
+
+      this.nodes.push(
+        noise,
+        hpFilter,
+        gain1,
+        bodyOsc,
+        bodyGain,
+        snapNoise,
+        bpFilter,
+        snapGain,
+        subOsc,
+        subGain
+      );
+    } catch {}
+  }
+
+  // Fire shutter sound immediately on user interaction
+  playShutterNow() {
+    const ctx = this.init();
+    if (!ctx) return;
+    this.scheduleShutter(ctx.currentTime);
+  }
+
+  stopAll() {
+    this.nodes.forEach((node) => {
+      try {
+        if (typeof node === "object" && "stop" in node && typeof (node as AudioScheduledSourceNode).stop === "function") {
+          (node as AudioScheduledSourceNode).stop();
+        }
+      } catch {}
+    });
+    this.nodes = [];
   }
 }
 
-function playTimerBeepFallback() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1050, ctx.currentTime);
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.08);
-  } catch {}
-}
-
-function playFocusChimeFallback() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc1.type = "sine";
-    osc2.type = "sine";
-    osc1.frequency.setValueAtTime(1400, ctx.currentTime);
-    osc2.frequency.setValueAtTime(1850, ctx.currentTime + 0.035);
-    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
-    osc1.connect(gain);
-    osc2.connect(gain);
-    gain.connect(ctx.destination);
-    osc1.start();
-    osc2.start();
-    osc1.stop(ctx.currentTime + 0.14);
-    osc2.stop(ctx.currentTime + 0.14);
-  } catch {}
-}
-
-function playShutterFallback() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-    // Transient A
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(240, now);
-    osc.frequency.exponentialRampToValueAtTime(45, now + 0.06);
-    gain.gain.setValueAtTime(0.4, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.08);
-  } catch {}
-}
-
-// Zero-latency audio player with preloading
-function playSound(file: string, fallback: () => void) {
-  try {
-    const audio = new Audio(file);
-    audio.volume = 0.9;
-    const p = audio.play();
-    if (p !== undefined) {
-      p.catch(() => fallback());
-    }
-  } catch {
-    fallback();
-  }
-}
-
-export function playCameraShutterSound() {
-  playSound("/audio/camera-shutter.wav", playShutterFallback);
-}
+const audioEngine = new CameraAudioEngine();
 
 export function CameraLensIntro() {
   const [countdown, setCountdown] = useState<number | null>(3);
@@ -102,67 +207,111 @@ export function CameraLensIntro() {
     "counting" | "locked" | "shutter" | "flash" | "revealed" | "done"
   >("counting");
   const [active, setActive] = useState(true);
-  const timerRef = useRef<NodeJS.Timeout[]>([]);
+  const animFrameRef = useRef<number | null>(null);
+  const isDoneRef = useRef(false);
 
-  const triggerShutter = () => {
-    // Clear pending timers
-    timerRef.current.forEach((t) => clearTimeout(t));
+  const triggerShutterImmediate = () => {
+    if (isDoneRef.current) return;
+    isDoneRef.current = true;
 
-    setPhase("locked");
-    playSound("/audio/focus-lock.wav", playFocusChimeFallback);
+    audioEngine.stopAll();
+    audioEngine.playShutterNow();
 
-    // After 240ms focus lock -> Fire shutter sound & white flash
-    const t1 = setTimeout(() => {
-      setPhase("shutter");
-      playCameraShutterSound();
-    }, 240);
+    setCountdown(null);
+    setPhase("shutter");
 
-    const t2 = setTimeout(() => {
+    setTimeout(() => {
       setPhase("flash");
-    }, 310);
+    }, 60);
 
-    // Reveal viewfinder
-    const t3 = setTimeout(() => {
+    setTimeout(() => {
       setPhase("revealed");
-    }, 560);
+    }, 320);
 
-    // Unmount
-    const t4 = setTimeout(() => {
+    setTimeout(() => {
       setPhase("done");
       setActive(false);
-    }, 1400);
-
-    timerRef.current = [t1, t2, t3, t4];
+    }, 1100);
   };
 
   useEffect(() => {
-    // Synchronized 3-second countdown: 3 -> 2 -> 1 -> SNAP!
-    // Second 3:
-    setCountdown(3);
-    playSound("/audio/timer-beep.wav", playTimerBeepFallback);
+    // Check if user previously muted/disabled sound
+    const isMuted = localStorage.getItem("musicPlaying") === "false";
 
-    // Second 2:
-    const t3 = setTimeout(() => {
-      setCountdown(2);
-      playSound("/audio/timer-beep.wav", playTimerBeepFallback);
-    }, 1000);
+    // 1. Initialize Audio Context and schedule unified audio events (only if not muted)
+    if (!isMuted) {
+      const ctx = audioEngine.init();
+      const audioStart = ctx ? ctx.currentTime : 0;
 
-    // Second 1 (Focus Lock chime):
-    const t2 = setTimeout(() => {
-      setCountdown(1);
-      playSound("/audio/focus-lock.wav", playFocusChimeFallback);
-    }, 2000);
+      if (ctx) {
+        // Schedule exact audio events:
+        // T+0.0s: 3 (beep)
+        audioEngine.scheduleBeep(audioStart + 0.02, 1050);
+        // T+1.0s: 2 (beep)
+        audioEngine.scheduleBeep(audioStart + 1.0, 1050);
+        // T+2.0s: 1 (focus chime)
+        audioEngine.scheduleFocusLock(audioStart + 2.0);
+        // T+3.0s: 0 (mechanical shutter snap)
+        audioEngine.scheduleShutter(audioStart + 3.0);
+      }
+    }
 
-    // Second 0 (Shutter release):
-    const t1 = setTimeout(() => {
-      setCountdown(null);
-      triggerShutter();
-    }, 3000);
+    const onMuteAll = () => {
+      audioEngine.stopAll();
+    };
+    window.addEventListener("sixfilmz:mute-all", onMuteAll);
 
-    timerRef.current = [t3, t2, t1];
+    // 2. High-precision visual master clock using requestAnimationFrame
+    const startTime = performance.now();
+
+    const loop = () => {
+      if (isDoneRef.current) return;
+
+      const elapsed = (performance.now() - startTime) / 1000;
+
+      if (elapsed < 1.0) {
+        // [0.0s - 1.0s] -> 3
+        setCountdown(3);
+        setPhase("counting");
+      } else if (elapsed < 2.0) {
+        // [1.0s - 2.0s] -> 2
+        setCountdown(2);
+        setPhase("counting");
+      } else if (elapsed < 3.0) {
+        // [2.0s - 3.0s] -> 1 (Focus locked)
+        setCountdown(1);
+        setPhase("locked");
+      } else if (elapsed < 3.08) {
+        // [3.0s - 3.08s] -> Shutter snap!
+        setCountdown(null);
+        setPhase("shutter");
+      } else if (elapsed < 3.32) {
+        // [3.08s - 3.32s] -> Aperture flash
+        setCountdown(null);
+        setPhase("flash");
+      } else if (elapsed < 4.1) {
+        // [3.32s - 4.1s] -> Viewfinder smooth reveal
+        setCountdown(null);
+        setPhase("revealed");
+      } else {
+        // [4.1s+] -> Unmount overlay
+        isDoneRef.current = true;
+        setPhase("done");
+        setActive(false);
+        return;
+      }
+
+      animFrameRef.current = requestAnimationFrame(loop);
+    };
+
+    animFrameRef.current = requestAnimationFrame(loop);
 
     return () => {
-      timerRef.current.forEach((t) => clearTimeout(t));
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
+      window.removeEventListener("sixfilmz:mute-all", onMuteAll);
+      audioEngine.stopAll();
     };
   }, []);
 
@@ -170,13 +319,13 @@ export function CameraLensIntro() {
 
   return (
     <div
-      onClick={phase === "counting" ? triggerShutter : undefined}
+      onClick={phase === "counting" || phase === "locked" ? triggerShutterImmediate : undefined}
       className={`fixed inset-0 z-[100] flex flex-col justify-between overflow-hidden transition-all duration-700 select-none ${
         phase === "revealed" || phase === "done"
           ? "pointer-events-none opacity-0 scale-105"
           : "opacity-100 scale-100 cursor-pointer"
       }`}
-      aria-label="Camera Viewfinder Intro - Tap anywhere to capture photo"
+      aria-label="Camera Viewfinder - Tap to capture photo immediately"
     >
       {/* 1. Optical Lens Blur Layer (Racks focus into sharp 4K) */}
       <div
@@ -228,7 +377,7 @@ export function CameraLensIntro() {
         </div>
       </header>
 
-      {/* 4. Center Viewfinder Focus Reticle with Bold Synchronized Countdown */}
+      {/* 4. Center Viewfinder Focus Reticle with Perfectly Coordinated Countdown */}
       <main className="relative z-10 flex flex-1 items-center justify-center p-4">
         {/* Rule of Thirds Grid (Subtle) */}
         <div className="pointer-events-none absolute inset-6 sm:inset-16 grid grid-cols-3 grid-rows-3 opacity-15">
@@ -243,7 +392,7 @@ export function CameraLensIntro() {
           <div />
         </div>
 
-        {/* Framing Box & Bold Countdown Unit */}
+        {/* Framing Box & Bold Synchronized Countdown Unit */}
         <div className="relative flex flex-col items-center justify-center">
           {/* Corner Viewfinder Brackets */}
           <div
