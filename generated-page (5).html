@@ -1,0 +1,667 @@
+<html lang="en"><head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USAMA NEAL - Visual Artist</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+* {
+font-family: "Inter", sans-serif;
+}
+html {
+scroll-behavior: smooth;
+}
+@property --gradient-angle {
+syntax: "<angle>";
+initial-value: 0deg;
+inherits: false;
+}
+.shiny-cta {
+--gradient-angle: 0deg;
+position: relative;
+overflow: hidden;
+border-radius: 9999px;
+padding: 1rem 2rem;
+font-weight: 500;
+color: #ffffff;
+background: linear-gradient(#000000, #000000) padding-box,
+conic-gradient(from var(--gradient-angle),
+transparent 0%,
+#374151 10%,
+#6b7280 20%,
+#374151 30%,
+transparent 40%) border-box;
+border: 1px solid transparent;
+transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+cursor: pointer;
+animation: border-spin 3s linear infinite;
+}
+@keyframes border-spin {
+to {
+--gradient-angle: 360deg;
+}
+}
+.shiny-cta:hover {
+background: linear-gradient(#111111, #111111) padding-box,
+conic-gradient(from var(--gradient-angle),
+transparent 0%,
+#4b5563 10%,
+#9ca3af 20%,
+#4b5563 30%,
+transparent 40%) border-box;
+}
+.fade-in {
+opacity: 0;
+transform: translateY(40px);
+transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.fade-in.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.fade-in-left {
+opacity: 0;
+transform: translateX(-60px);
+transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.fade-in-left.visible {
+opacity: 1;
+transform: translateX(0);
+}
+.fade-in-right {
+opacity: 0;
+transform: translateX(60px);
+transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.fade-in-right.visible {
+opacity: 1;
+transform: translateX(0);
+}
+.scale-in {
+opacity: 0;
+transform: scale(0.9);
+transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.scale-in.visible {
+opacity: 1;
+transform: scale(1);
+}
+.hero-image {
+animation: heroFade 2s ease-out forwards;
+}
+@keyframes heroFade {
+from {
+opacity: 0;
+transform: scale(1.05);
+}
+to {
+opacity: 1;
+transform: scale(1);
+}
+}
+.hero-title {
+animation: titleFade 1.5s ease-out 0.5s forwards;
+opacity: 0;
+}
+@keyframes titleFade {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.nav-fade {
+animation: navFade 1s ease-out 0.3s forwards;
+opacity: 0;
+}
+@keyframes navFade {
+to {
+opacity: 1;
+}
+}
+.service-card:hover .service-image {
+transform: scale(1.05);
+filter: brightness(1.1);
+}
+.service-card:hover .service-glow {
+opacity: 0.3;
+}
+.work-card:hover .work-image {
+transform: scale(1.03);
+}
+.parallax {
+will-change: transform;
+}
+.line-reveal {
+width: 0;
+transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.line-reveal.visible {
+width: 120px;
+}
+.counter {
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.counter.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.vignette {
+box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
+}
+.reflection {
+mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+-webkit-mask-image: linear-gradient(to bottom,
+rgba(0, 0, 0, 0.3),
+transparent);
+}
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">.font-geist { font-family: 'Geist', sans-serif !important; }</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">.font-roboto { font-family: 'Roboto', sans-serif !important; }</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">.font-montserrat { font-family: 'Montserrat', sans-serif !important; }</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">.font-poppins { font-family: 'Poppins', sans-serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">.font-manrope { font-family: 'Manrope', sans-serif !important; }</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">.font-work-sans { font-family: 'Work Sans', sans-serif !important; }</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">.font-pt-serif { font-family: 'PT Serif', serif !important; }</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">.font-geist-mono { font-family: 'Geist Mono', monospace !important; }</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">.font-space-mono { font-family: 'Space Mono', monospace !important; }</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">.font-quicksand { font-family: 'Quicksand', sans-serif !important; }</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">.font-nunito { font-family: 'Nunito', sans-serif !important; }</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">.font-newsreader { font-family: 'Newsreader', serif !important; }</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">.font-oswald { font-family: 'Oswald', sans-serif !important; }</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }</style></head>
+
+<body class="overflow-x-hidden text-white bg-black">
+  <!-- Music Toggle -->
+  <div id="music-toggle" class="fixed left-6 bottom-6 z-50 w-12 h-12 rounded-full bg-gray-900/80 border border-gray-800/50 backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-gray-800/80 hover:border-gray-700/50 transition-all duration-500 group" onclick="toggleMusic()" aria-label="Toggle background music" role="button" tabindex="0">
+    <svg id="music-off-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-white transition-colors duration-300">
+      <path d="M9 18V5l12-2v13" class=""></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+      <line x1="1" y1="1" x2="23" y2="23"></line>
+    </svg>
+
+    <svg id="music-on-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white hidden">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+
+    <div id="music-pulse" class="absolute inset-0 rounded-full border border-white/20 animate-ping hidden" style="display: none;"></div>
+  </div>
+
+  <audio id="background-music" loop="" preload="auto" class="">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3" class="">
+  </audio>
+
+  <!-- Navigation -->
+  <nav class="fixed z-50 nav-fade top-0 right-0 left-0" style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px);">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 pt-6 pb-6 font-semibold">
+      <div class="flex items-center justify-between">
+        <!-- Left links -->
+        <div class="flex gap-8 lg:gap-12 items-center">
+          <a href="#3d-art-section" class="hover:text-white transition-colors duration-500 text-sm font-light text-gray-300">3D Art</a>
+          <a href="#results-section" class="hover:text-white transition-colors duration-500 text-sm font-light text-gray-300">Results</a>
+        </div>
+
+        <!-- Center Avatar (ONLY ONE) -->
+        <a href="#" class="w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-gray-800/50 shadow-lg shrink-0" aria-label="Home">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0cb36989-9ccf-447e-b20d-a87ef87438d5_320w.png" alt="Personal Avatar" class="w-full h-full object-cover" loading="eager">
+        </a>
+
+        <!-- Right links -->
+        <div class="flex gap-8 lg:gap-12 items-center">
+          <a href="#photography-section" class="hover:text-white transition-colors duration-500 text-sm font-light text-gray-300">Photography</a>
+          <a href="#videography-section" class="hover:text-white transition-colors duration-500 text-sm font-light text-gray-300">Videography</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative h-screen flex items-center justify-center overflow-hidden">
+    <div class="vignette absolute inset-0">
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3fd1034d-cce6-4503-8511-e5294e5ea53f_3840w.jpg?w=800&amp;q=80" alt="Sports Car" class="hero-image opacity-70 w-full h-full object-cover">
+    </div>
+
+    <div class="bg-gradient-to-t from-black to-transparent h-32 absolute inset-x-0 bottom-0"></div>
+
+    <div class="relative z-10 text-center px-6">
+      <h1 class="hero-title text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight">
+        WELCOME — YOU’VE ENTERED MY WORLD
+      </h1>
+    </div>
+
+    <div class="-translate-x-1/2 nav-fade absolute bottom-8 left-1/2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" class="lucide lucide-chevron-down w-6 h-6 text-gray-500 animate-bounce"><path d="m6 9 6 6 6-6"></path></svg>
+    </div>
+  </section>
+
+  <!-- Identity Section -->
+  <section class="min-h-screen flex pt-32 pr-6 pb-32 pl-6 items-center justify-center">
+    <div class="text-center max-w-4xl mx-auto">
+      <p class="fade-in text-3xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
+        Crafting visuals where <span class="font-medium">light</span>
+        <span class="font-medium">form</span> and
+        <span class="font-medium">emotion</span> collide.
+      </p>
+
+      <div class="mt-16 flex justify-center">
+        <div class="line-reveal h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-sm font-light text-gray-500 uppercase tracking-widest mb-16 fade-in">
+        Services
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- 3D Art -->
+        <div class="service-card relative group cursor-pointer fade-in-left" style="transition-delay: 0.1s" onclick="window.location.href='#3d-art-section'" data-category-link="3d-art">
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 aspect-[4/5] border border-gray-800/50 group-hover:border-gray-700/50 transition-all duration-700">
+            <div class="absolute inset-0 opacity-20">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d7718598-162f-4055-816f-7ed796662e34_3840w.png" alt="3D Art" class="service-image w-full h-full object-cover transition-all duration-700 ease-out">
+            </div>
+
+            <div class="service-glow absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-700">
+            </div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-8">
+              <div class="w-14 h-14 rounded-xl bg-gray-800/80 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="box" class="lucide lucide-box w-7 h-7 text-gray-300"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+              </div>
+
+              <div class="">
+                <h3 class="text-2xl font-medium tracking-tight mb-3">3D Art</h3>
+                <p class="text-sm text-gray-400 font-light leading-relaxed">
+                  Dimensional storytelling through immersive 3D visuals and environments.
+                </p>
+
+                <div class="mt-6 flex items-center gap-2 text-sm text-gray-500 group-hover:text-white transition-colors duration-500">
+                  <span class="font-light">Explore</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" class="lucide lucide-arrow-right w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-500"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photography -->
+        <div class="service-card relative group cursor-pointer fade-in" style="transition-delay: 0.2s" onclick="window.location.href='#photography-section'" data-category-link="photography">
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 aspect-[4/5] border border-gray-800/50 group-hover:border-gray-700/50 transition-all duration-700">
+            <div class="absolute inset-0 opacity-20">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ac66da44-4d8d-4e28-a693-189e654e3e30_800w.png" alt="Photography" class="service-image w-full h-full object-cover transition-all duration-700 ease-out">
+            </div>
+
+            <div class="service-glow absolute inset-0 bg-gradient-to-br from-amber-500/0 to-orange-500/0 group-hover:from-amber-500/10 group-hover:to-orange-500/10 transition-all duration-700">
+            </div>
+
+            <div class="flex flex-col z-10 h-full pt-8 pr-8 pb-8 pl-8 relative justify-between">
+              <div class="w-14 h-14 rounded-xl bg-gray-800/80 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" class="lucide lucide-camera w-7 h-7 text-gray-300"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+              </div>
+
+              <div class="">
+                <h3 class="text-2xl font-medium tracking-tight mb-3">Photography</h3>
+                <p class="text-sm text-gray-400 font-light leading-relaxed">
+                  Captured moments that tell powerful stories through light and composition.
+                </p>
+
+                <div class="mt-6 flex items-center gap-2 text-sm text-gray-500 group-hover:text-white transition-colors duration-500">
+                  <span class="font-light">Explore</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" class="lucide lucide-arrow-right w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-500"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Videography -->
+        <div class="service-card relative group cursor-pointer fade-in-right" style="transition-delay: 0.3s" onclick="window.location.href='#videography-section'" data-category-link="videography">
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 aspect-[4/5] border border-gray-800/50 group-hover:border-gray-700/50 transition-all duration-700">
+            <div class="absolute inset-0 opacity-20">
+              <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&amp;q=80" alt="Videography" class="service-image w-full h-full object-cover transition-all duration-700 ease-out">
+            </div>
+
+            <div class="service-glow absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-teal-500/0 group-hover:from-emerald-500/10 group-hover:to-teal-500/10 transition-all duration-700">
+            </div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-8">
+              <div class="w-14 h-14 rounded-xl bg-gray-800/80 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="video" class="lucide lucide-video w-7 h-7 text-gray-300"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+              </div>
+
+              <div>
+                <h3 class="text-2xl font-medium tracking-tight mb-3">Videography</h3>
+                <p class="text-sm text-gray-400 font-light leading-relaxed">
+                  Motion and emotion combined to create cinematic visual experiences.
+                </p>
+
+                <div class="mt-6 flex items-center gap-2 text-sm text-gray-500 group-hover:text-white transition-colors duration-500">
+                  <span class="font-light">Explore</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" class="lucide lucide-arrow-right w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-500"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Works -->
+  <section class="pt-32 pr-6 pb-32 pl-6" data-category="results" id="results-section">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-sm font-light text-gray-500 uppercase tracking-widest mb-16 fade-in">
+        Selected Works
+      </h2>
+
+      <div class="space-y-24">
+        <div class="work-card group cursor-pointer scale-in">
+          <div class="relative overflow-hidden rounded-3xl aspect-[16/9] bg-gray-900">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/52ca96d3-18d4-4859-9296-8bf670fa1db4_800w.jpg" alt="Project 1" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+            <div class="bg-gradient-to-t from-black/60 to-transparent absolute top-0 right-0 bottom-0 left-0"></div>
+            <div class="absolute bottom-12 left-12">
+              <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Automotive</p>
+              <h3 class="text-3xl md:text-4xl font-medium tracking-tight">Porsche 911 Turbo</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="work-card group cursor-pointer scale-in" style="transition-delay: 0.1s">
+            <div class="relative overflow-hidden rounded-3xl aspect-[4/5] bg-gray-900">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/638cdc8b-5e9e-4faf-946b-1e9141744e7b_1600w.jpg" alt="Project 2" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-8 left-8">
+                <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Abstract</p>
+                <h3 class="text-2xl font-medium tracking-tight">Fluid Forms</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="work-card group cursor-pointer scale-in" style="transition-delay: 0.2s">
+            <div class="relative overflow-hidden rounded-3xl aspect-[4/5] bg-gray-900">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/603c4ef5-0d89-444c-a992-4ff2cd26fd66_800w.png" alt="Project 3" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute bottom-8 left-8">
+                <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Product</p>
+                <h3 class="text-2xl font-medium tracking-tight">Tech Noir</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="work-card group cursor-pointer scale-in">
+          <div class="relative overflow-hidden rounded-3xl aspect-[21/9] bg-gray-900">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c0c2f5fa-450a-40e9-8082-f8c6bdf5eae5_3840w.png" alt="Project 4" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+            <div class="bg-gradient-to-t from-black/60 to-transparent absolute top-0 right-0 bottom-0 left-0"></div>
+            <div class="absolute bottom-12 left-12">
+              <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Cinematic</p>
+              <h3 class="text-3xl md:text-4xl font-medium tracking-tight">Night Drive</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photography -->
+  <section id="photography-section" data-category="photography" class="py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-sm font-light text-gray-500 uppercase tracking-widest mb-16 fade-in">
+        Photography
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="work-card group cursor-pointer scale-in">
+          <div class="relative overflow-hidden rounded-3xl aspect-[4/5] bg-gray-900">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dfb4897c-1a15-4952-9c8b-7d1c9eaad4f6_1600w.png" alt="Photography 1" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-8 left-8">
+              <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Portrait</p>
+              <h3 class="text-2xl font-medium tracking-tight">Golden Hour</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="work-card group cursor-pointer scale-in" style="transition-delay: 0.1s">
+          <div class="relative overflow-hidden rounded-3xl aspect-[4/5] bg-gray-900">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/de6dea83-3b4b-4887-a68f-00cd7eb1ad33_1600w.png" alt="Photography 2" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-8 left-8">
+              <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Landscape</p>
+              <h3 class="text-2xl font-medium tracking-tight">Mountain Peaks</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Videography -->
+  <section id="videography-section" data-category="videography" class="py-32 px-6 bg-gradient-to-b from-black via-gray-950 to-black">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-sm font-light text-gray-500 uppercase tracking-widest mb-16 fade-in">
+        Videography
+      </h2>
+
+      <div class="space-y-16">
+        <div class="work-card group cursor-pointer scale-in">
+          <div class="relative overflow-hidden rounded-3xl aspect-[16/9] bg-gray-900">
+            <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1600&amp;q=80" alt="Video Project 1" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-all duration-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white" class="">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </div>
+            </div>
+
+            <div class="absolute bottom-12 left-12">
+              <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Commercial</p>
+              <h3 class="text-3xl md:text-4xl font-medium tracking-tight">Brand Film</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="work-card group cursor-pointer scale-in" style="transition-delay: 0.1s">
+          <div class="relative overflow-hidden rounded-3xl aspect-[16/9] bg-gray-900">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/62332b52-0be1-4366-a0a7-24b8d283dcba_3840w.jpg" alt="Video Project 2" class="work-image w-full h-full object-cover transition-transform duration-1000 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-all duration-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </div>
+            </div>
+
+            <div class="absolute bottom-12 left-12">
+              <p class="text-xs text-gray-400 uppercase tracking-widest mb-2">Documentary</p>
+              <h3 class="text-3xl md:text-4xl font-medium tracking-tight">Behind The Scenes</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-48 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight mb-12 fade-in">
+        Ready to create something <span class="font-medium">timeless</span>?
+      </h2>
+      <div class="fade-in" style="transition-delay: 0.2s">
+        <button class="shiny-cta text-base">
+            <span>Let's create something timeless</span>
+          </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 border-t border-gray-900">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+        <p class="text-xs text-gray-600 font-light">© 2024 USAMA NEAL. All rights reserved.</p>
+
+        <div class="flex items-center gap-8">
+          <a href="/#" class="hover:text-white transition-colors duration-500 text-gray-500" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="instagram" class="lucide lucide-instagram w-5 h-5"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-white transition-colors duration-500" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="twitter" class="lucide lucide-twitter w-5 h-5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-white transition-colors duration-500" aria-label="Dribbble">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="dribbble" class="lucide lucide-dribbble w-5 h-5"><circle cx="12" cy="12" r="10"></circle><path d="M19.13 5.09C15.22 9.14 10 10.44 2.25 10.94"></path><path d="M21.75 12.84c-6.62-1.41-12.14 1-16.38 6.32"></path><path d="M8.56 2.75c4.37 6 6 9.42 8 17.72"></path></svg>
+          </a>
+          <a href="#" class="text-gray-500 hover:text-white transition-colors duration-500" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="linkedin" class="lucide lucide-linkedin w-5 h-5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+      // Music Toggle Functionality
+      let musicPlaying = false;
+      const audio = document.getElementById("background-music");
+      const musicOnIcon = document.getElementById("music-on-icon");
+      const musicOffIcon = document.getElementById("music-off-icon");
+      const musicPulse = document.getElementById("music-pulse");
+
+      // Restore state
+      if (localStorage.getItem("musicPlaying") === "true") {
+        audio
+          .play()
+          .then(() => {
+            musicPlaying = true;
+            musicOnIcon.classList.remove("hidden");
+            musicOffIcon.classList.add("hidden");
+            musicPulse.classList.remove("hidden");
+          })
+          .catch(() => {
+            // Autoplay blocked
+          });
+      }
+
+      function toggleMusic() {
+        if (musicPlaying) {
+          audio.pause();
+          musicPlaying = false;
+          musicOnIcon.classList.add("hidden");
+          musicOffIcon.classList.remove("hidden");
+          musicPulse.classList.add("hidden");
+          localStorage.setItem("musicPlaying", "false");
+        } else {
+          audio
+            .play()
+            .then(() => {
+              musicPlaying = true;
+              musicOnIcon.classList.remove("hidden");
+              musicOffIcon.classList.add("hidden");
+              musicPulse.classList.remove("hidden");
+              localStorage.setItem("musicPlaying", "true");
+            })
+            .catch((e) => {
+              console.log("Audio play failed:", e);
+            });
+        }
+      }
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", (e) => {
+          const href = link.getAttribute("href");
+          if (!href || href === "#") return;
+
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+
+      // Intersection Observer for scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      document
+        .querySelectorAll(
+          ".fade-in, .fade-in-left, .fade-in-right, .scale-in, .line-reveal, .counter"
+        )
+        .forEach((el) => observer.observe(el));
+
+      // Nav background on scroll
+      const nav = document.querySelector("nav");
+      window.addEventListener("scroll", () => {
+        const currentScroll = window.pageYOffset;
+        if (currentScroll > 100) {
+          nav.style.background = "rgba(0, 0, 0, 0.8)";
+          nav.style.backdropFilter = "blur(20px)";
+        } else {
+          nav.style.background = "transparent";
+          nav.style.backdropFilter = "none";
+        }
+      });
+  </script>
+
+/* --- Aura Design Editing Fix --- */
+
+/* overlays &amp; fixed layers: لا تمسك النقر */
+.vignette,
+.service-glow,
+.absolute.inset-0,
+.fixed {
+pointer-events: none !important;
+}
+
+/* خليه يسمح بتحديد المحتوى */
+section,
+h1, h2, h3, p,
+img,
+a,
+button {
+pointer-events: auto !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
