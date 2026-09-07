@@ -72,7 +72,7 @@ export function ContactModal({ open, onClose }: Props) {
         <p className="contact-kicker mb-3 text-[10px] uppercase tracking-[0.35em] text-gray-400">
           Start a conversation
         </p>
-        <h2 id="contact-title" className="contact-title mb-10 text-3xl font-light tracking-tight md:text-4xl">
+        <h2 id="contact-title" className="contact-title font-cinematic mb-10 text-3xl font-light tracking-wider md:text-4xl text-white">
           Let&apos;s create
         </h2>
 

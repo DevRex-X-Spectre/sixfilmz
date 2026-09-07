@@ -9,8 +9,8 @@ export function CTA({ onOpenContact }: Props) {
     <section id="contact-section" className="scroll-mt-28 px-5 py-28 sm:px-6 sm:py-48">
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
-          <h2 className="mb-12 text-4xl font-light tracking-tight md:text-6xl lg:text-7xl">
-            Ready to create something <span className="font-medium">timeless</span>?
+          <h2 className="font-cinematic mb-12 text-3xl font-light tracking-wider md:text-5xl lg:text-6xl text-white">
+            Ready to create something <span className="font-semibold italic text-white">timeless</span>?
           </h2>
         </Reveal>
         <Reveal delay={0.2}>

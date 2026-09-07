@@ -47,7 +47,7 @@ export const socials = [
   {
     id: "youtube",
     label: "YouTube",
-    href: `https://youtube.com/?utm_source=sixfilmz&text=${encodeURIComponent(inquiryMessage)}`,
+    href: "https://www.youtube.com/@SixFilmz",
   },
   {
     id: "linkedin",

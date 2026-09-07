@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cinematic: "Cinzel", Georgia, serif;
+  --font-display: "Syne", sans-serif;
+  --font-mono: "Space Mono", monospace;
 }
 
 html {
@@ -13,6 +16,18 @@ body {
   background: #000;
   color: #fff;
   overflow-x: hidden;
+}
+
+.font-cinematic {
+  font-family: var(--font-cinematic);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
 }
 
 @property --gradient-angle {
@@ -141,87 +156,74 @@ body {
   }
 }
 
-.hero-stage {
-  perspective: 900px;
-}
-
 .hero-kicker {
-  animation: titleFade 1.2s ease-out 0.25s forwards;
+  animation: titleFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
   opacity: 0;
 }
 
-.hero-3d {
-  transform-style: preserve-3d;
-  transform: rotateX(6deg);
+.hero-title-clean-wrapper {
   will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.hero-3d-stack {
-  position: relative;
+.hero-title-clean {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: titleFade 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.hero-clean-top {
   display: block;
-  transform-style: preserve-3d;
-}
-
-.hero-3d-top,
-.hero-3d-main {
-  display: block;
-}
-
-.hero-3d-top {
-  margin-bottom: 0.12em;
-  font-size: clamp(1.4rem, 4vw, 2.6rem);
-  font-weight: 300;
-  letter-spacing: 0.18em;
+  margin-bottom: 0.25em;
+  font-family: var(--font-cinematic);
+  font-size: clamp(1.1rem, 3.2vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.hero-3d-main {
-  font-size: clamp(3.2rem, 12vw, 8.5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-  text-transform: lowercase;
-}
-
-.hero-3d-layer {
-  position: absolute;
-  inset: 0;
-  color: #0b0b0b;
-  transform: translateZ(calc(var(--z) * -1.35px));
-  user-select: none;
-  pointer-events: none;
-}
-
-.hero-3d-face {
-  position: relative;
+.hero-clean-main {
   display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 13vw, 9.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.88;
+  text-transform: lowercase;
   background-image: linear-gradient(
-    185deg,
+    180deg,
     #ffffff 0%,
-    #f4f4f4 28%,
-    #c8c8c8 47%,
-    #ffffff 52%,
-    #9a9a9a 78%,
-    #e8e8e8 100%
+    #f2f2f5 50%,
+    #d2d2dc 100%
   );
-  background-size: 160% 160%;
-  background-position: 0% 50%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation:
-    titleFade 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both,
-    heroChrome 5.5s ease-in-out 1.6s infinite;
-  filter: drop-shadow(0 22px 35px rgba(0, 0, 0, 0.55));
 }
 
-@keyframes heroChrome {
-  0%,
-  100% {
-    background-position: 0% 40%;
+/* Subtle ambient dust motes */
+.hero-particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+  animation: floatParticle 8s ease-in-out infinite alternate;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.2;
   }
   50% {
-    background-position: 100% 60%;
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-30px) translateX(10px);
+    opacity: 0.2;
   }
 }
 

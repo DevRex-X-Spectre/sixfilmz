@@ -8,10 +8,10 @@ export function Identity() {
     >
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
-          <p className="text-3xl font-light leading-tight tracking-tight md:text-5xl lg:text-6xl">
-            Crafting visuals where <span className="font-medium">light</span>,{" "}
-            <span className="font-medium">form</span> and{" "}
-            <span className="font-medium">emotion</span> collide.
+          <p className="font-cinematic text-3xl font-light leading-snug tracking-wide md:text-5xl lg:text-6xl text-white/95">
+            Crafting visuals where <span className="font-semibold text-white">light</span>,{" "}
+            <span className="font-semibold text-white">form</span> and{" "}
+            <span className="font-semibold text-white">emotion</span> collide.
           </p>
         </Reveal>
         <div className="mt-16 flex justify-center">

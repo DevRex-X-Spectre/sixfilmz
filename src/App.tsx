@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { MediaItem } from "./data/content";
+import { CameraLensIntro } from "./components/CameraLensIntro";
 import { Cinematography } from "./components/Cinematography";
 import { ContactModal } from "./components/ContactModal";
 import { CTA } from "./components/CTA";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { Identity } from "./components/Identity";
-import { Filmstrip } from "./components/Filmstrip";
 import { Viewer } from "./components/Viewer";
 import { MusicToggle } from "./components/MusicToggle";
 import { Navbar } from "./components/Navbar";
@@ -21,17 +21,16 @@ export default function App() {
 
   return (
     <div className="overflow-x-hidden bg-black text-white">
+      <CameraLensIntro />
       <Navbar />
       <MusicToggle />
       <main>
         <Hero />
         <Identity />
         <Services />
-        <Filmstrip />
         <SelectedWorks onOpen={setMedia} />
         <Cinematography onOpen={setMedia} />
         <Photography onOpen={setMedia} />
-        <Filmstrip />
         <Videography onOpen={setMedia} />
         <CTA onOpenContact={() => setContactOpen(true)} />
       </main>

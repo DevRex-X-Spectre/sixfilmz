@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { artist, navLinks } from "../data/content";
+import { navLinks } from "../data/content";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -47,10 +47,14 @@ export function Navbar() {
 
           <a
             href="#top"
-            className="mx-auto flex h-12 items-center justify-center px-2 text-[11px] font-medium tracking-[0.32em] text-white sm:h-[72px] sm:text-xs sm:tracking-[0.4em]"
-            aria-label="Home"
+            className="group mx-auto flex items-center justify-center transition-transform duration-300 hover:scale-105"
+            aria-label="SIX FILMZ Home"
           >
-            {artist.name}
+            <img
+              src="/channels4_profile.jpg"
+              alt="SIX FILMZ Logo"
+              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover transition-all duration-300"
+            />
           </a>
 
           <div className="flex items-center justify-end gap-8 lg:gap-12">
