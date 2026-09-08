@@ -17,11 +17,13 @@ export function useScrollReveal<T extends HTMLElement>() {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
+          } else {
+            // Bi-directional: re-arms animation whenever element leaves viewport
+            entry.target.classList.remove("visible");
           }
         }
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
     );
 
     observer.observe(node);

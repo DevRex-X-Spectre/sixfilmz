@@ -8,18 +8,12 @@ type Props = {
 };
 
 const spans = [
-  "photo-span-6 md:min-h-[380px]",
-  "photo-span-3",
-  "photo-span-3",
-  "photo-span-2",
-  "photo-span-2",
-  "photo-span-2",
-  "photo-span-3",
-  "photo-span-3",
-  "photo-span-4",
-  "photo-span-2",
-  "photo-span-3",
-  "photo-span-3",
+  "photo-span-3 md:min-h-[380px]",
+  "photo-span-3 md:min-h-[380px]",
+  "photo-span-2 md:min-h-[300px]",
+  "photo-span-2 md:min-h-[300px]",
+  "photo-span-2 md:min-h-[300px]",
+  "photo-span-6 md:min-h-[320px]",
 ];
 
 export function Photography({ onOpen }: Props) {
@@ -41,7 +35,7 @@ export function Photography({ onOpen }: Props) {
           {photographyWorks.map((item, index) => (
             <WorkCard
               key={item.id}
-              item={{ ...item, aspect: index === 0 ? "wide" : item.aspect }}
+              item={item}
               delay={(index % 3) * 0.08}
               onOpen={onOpen}
               className={spans[index] ?? "photo-span-2"}

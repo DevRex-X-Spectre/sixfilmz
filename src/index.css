@@ -83,8 +83,9 @@ body {
 
 .fade-in {
   opacity: 0;
-  transform: translateY(40px);
-  transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateY(35px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .fade-in.visible {
@@ -94,8 +95,9 @@ body {
 
 .fade-in-left {
   opacity: 0;
-  transform: translateX(-60px);
-  transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateX(-45px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .fade-in-left.visible {
@@ -105,8 +107,9 @@ body {
 
 .fade-in-right {
   opacity: 0;
-  transform: translateX(60px);
-  transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateX(45px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .fade-in-right.visible {
@@ -116,13 +119,14 @@ body {
 
 .scale-in {
   opacity: 0;
-  transform: scale(0.9);
-  transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: scale(0.94) translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
 .scale-in.visible {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateY(0);
 }
 
 .hero-image {
@@ -156,11 +160,6 @@ body {
   }
 }
 
-.hero-kicker {
-  animation: titleFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
-  opacity: 0;
-}
-
 .hero-title-clean-wrapper {
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
@@ -171,24 +170,24 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: titleFade 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
 }
 
 .hero-clean-top {
   display: block;
-  margin-bottom: 0.25em;
+  margin-bottom: 0.15em;
   font-family: var(--font-cinematic);
-  font-size: clamp(1.1rem, 3.2vw, 2.2rem);
+  font-size: clamp(0.95rem, 3vw, 2.2rem);
   font-weight: 600;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.9);
 }
 
-.hero-clean-main {
-  display: block;
+.hero-clean-main,
+.hero-clean-word {
+  display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(3.4rem, 13vw, 9.5rem);
+  font-size: clamp(3rem, 14vw, 9.5rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.88;
@@ -202,6 +201,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  will-change: transform, opacity, filter;
 }
 
 /* Subtle ambient dust motes */

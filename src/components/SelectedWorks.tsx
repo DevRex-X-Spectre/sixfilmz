@@ -46,6 +46,17 @@ export function SelectedWorks({ onOpen }: Props) {
           </div>
 
           <WorkCard item={wide} overlay="bottom-lg" onOpen={onOpen} />
+
+          <div className="pt-6 text-center">
+            <Reveal delay={0.2}>
+              <a
+                href="/gallery"
+                className="shiny-cta inline-flex items-center gap-3 text-sm font-medium tracking-wider uppercase text-white hover:text-white"
+              >
+                <span>Explore Complete Gallery</span>
+              </a>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>

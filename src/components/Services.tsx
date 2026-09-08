@@ -10,7 +10,7 @@ const icons = {
 
 export function Services() {
   return (
-    <section className="px-4 py-24 sm:px-6 sm:py-32">
+    <section id="services-section" className="scroll-mt-28 px-4 py-24 sm:px-6 sm:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <h2 className="mb-16 text-sm font-light uppercase tracking-widest text-gray-400">

@@ -4,6 +4,7 @@ const AUDIO_PATHS = {
   shutter: "/audio/camera-shutter.wav",
   focus: "/audio/focus-lock.wav",
   beep: "/audio/timer-beep.wav",
+  cinemaWhoosh: "/audio/cinema-whoosh.wav",
 } as const;
 
 class CameraAudioService {
@@ -13,6 +14,7 @@ class CameraAudioService {
   private shutterAudio: HTMLAudioElement | null = null;
   private focusAudio: HTMLAudioElement | null = null;
   private beepAudio: HTMLAudioElement | null = null;
+  private cinemaWhooshAudio: HTMLAudioElement | null = null;
 
   private createAudio(src: string, volume: number) {
     const audio = new Audio(src);
@@ -28,6 +30,7 @@ class CameraAudioService {
     this.shutterAudio = this.createAudio(AUDIO_PATHS.shutter, 1);
     this.focusAudio = this.createAudio(AUDIO_PATHS.focus, 0.8);
     this.beepAudio = this.createAudio(AUDIO_PATHS.beep, 0.7);
+    this.cinemaWhooshAudio = this.createAudio(AUDIO_PATHS.cinemaWhoosh, 0.9);
 
     this.initialized = true;
     this.state = "ready";
@@ -39,6 +42,23 @@ class CameraAudioService {
     this.shutterAudio?.load();
     this.focusAudio?.load();
     this.beepAudio?.load();
+    this.cinemaWhooshAudio?.load();
+  }
+
+  async playCinemaWhoosh() {
+    this.initialize();
+
+    if (!this.cinemaWhooshAudio) return false;
+
+    try {
+      this.cinemaWhooshAudio.pause();
+      this.cinemaWhooshAudio.currentTime = 0;
+      await this.cinemaWhooshAudio.play();
+      return true;
+    } catch (error) {
+      console.warn("[CameraAudio] Cinema whoosh playback failed:", error);
+      return false;
+    }
   }
 
   async playShutter() {
@@ -102,6 +122,7 @@ class CameraAudioService {
       this.shutterAudio,
       this.focusAudio,
       this.beepAudio,
+      this.cinemaWhooshAudio,
     ];
 
     for (const audio of audios) {

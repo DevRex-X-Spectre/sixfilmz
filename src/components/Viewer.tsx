@@ -253,7 +253,7 @@ export function Viewer({ item, onClose, onOpen }: Props) {
             <h3 className="mt-1 text-xl font-medium tracking-tight md:text-2xl">{item.title}</h3>
           </div>
           <p className="hidden text-[10px] uppercase tracking-[0.28em] text-gray-600 sm:block">
-            SIX FILMZ
+            SIX STUDIO
           </p>
         </div>
       </div>

@@ -24,6 +24,7 @@ export function CameraLensIntro() {
 
     // Directly triggered by the user's click/tap.
     void cameraAudio.playShutter();
+    window.dispatchEvent(new CustomEvent("camera-shutter-capture"));
 
     setCountdown(null);
     setPhase("shutter");
@@ -70,6 +71,7 @@ export function CameraLensIntro() {
       if (elapsed >= 3 && !shutterPlayedRef.current) {
         shutterPlayedRef.current = true;
         void cameraAudio.playShutter();
+        window.dispatchEvent(new CustomEvent("camera-shutter-capture"));
       }
 
       if (elapsed < 1) {
@@ -242,7 +244,7 @@ export function CameraLensIntro() {
         </div>
 
         <div className="font-cinematic text-xs tracking-[0.2em] font-semibold text-white">
-          SIX FILMZ
+          SIX STUDIO
         </div>
       </footer>
     </div>
