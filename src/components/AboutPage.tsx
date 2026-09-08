@@ -386,11 +386,6 @@ export function AboutPage({ onOpenContact }: Props) {
                   className="h-full w-full rounded-full object-cover object-center filter brightness-105 contrast-110"
                 />
               </div>
-
-              <div className="mt-6 w-full pt-4 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-neutral-400">
-                <span>SIX STUDIO</span>
-                <span>SIXFILMZ // ARCHIVE</span>
-              </div>
             </div>
           </div>
 
@@ -415,7 +410,7 @@ export function AboutPage({ onOpenContact }: Props) {
 
             <p className="text-base sm:text-lg font-light leading-relaxed text-neutral-300">
               With skills spanning motion graphics, graphic design, and audio mixing, I approach
-              every shoot as a complete story —{" "}
+              every shoot as a complete story {" "}
               <span className="text-white font-medium">
                 honest, deliberate, and built to be remembered.
               </span>

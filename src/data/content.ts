@@ -57,7 +57,6 @@ export const socials = [
 export const navLinks = [
   { href: "/about", label: "About" },
   { href: "#services-section", label: "Services" },
-  { href: "#results-section", label: "Selected Works" },
   { href: "/gallery", label: "Gallery" },
   { href: "#contact-section", label: "Contact" },
 ] as const;
